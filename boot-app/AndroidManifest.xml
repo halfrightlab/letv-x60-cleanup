@@ -1,0 +1,16 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.judeyang.x60boot" android:versionCode="2" android:versionName="1.1">
+    <uses-sdk android:minSdkVersion="16" android:targetSdkVersion="16" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <application android:label="X60 SimpleTV Boot" android:allowBackup="false" android:debuggable="false">
+        <receiver android:name=".BootReceiver" android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="com.letv.helper.restart.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+        <receiver android:name=".DeferredReceiver" android:exported="false" />
+        <receiver android:name=".ControlReceiver" android:exported="true" android:permission="android.permission.DUMP" />
+        <activity android:name=".SetupActivity" android:exported="true" />
+    </application>
+</manifest>
