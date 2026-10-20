@@ -1,0 +1,74 @@
+{
+  "checked_at": "2026-10-20T13:20:17.635773+08:00",
+  "syntax_passed": true,
+  "unit_cases": 18,
+  "passed": true,
+  "real_adb_executed_by_unit_tests": false,
+  "real_tv_state_changed_by_unit_tests": false,
+  "physical_device_apply_restore_test": {
+    "passed": true,
+    "method": "Shipping apply / restore / apply functions in one identity-checked connection",
+    "baseline": "Owner TV already optimized; original manifest hash unchanged",
+    "stages": [
+      {
+        "stage": "apply-1",
+        "started_at": "2026-10-20T13:02:01.581120+08:00",
+        "ended_at": "2026-10-20T13:02:23.399372+08:00",
+        "verified": true
+      },
+      {
+        "stage": "restore",
+        "started_at": "2026-10-20T13:02:23.550877+08:00",
+        "ended_at": "2026-10-20T13:02:40.459361+08:00",
+        "verified": true
+      },
+      {
+        "stage": "apply-2",
+        "started_at": "2026-10-20T13:02:40.658810+08:00",
+        "ended_at": "2026-10-20T13:03:02.181752+08:00",
+        "verified": true
+      }
+    ]
+  },
+  "second_tv_hardware_test": false,
+  "boot_component_version": "1.1",
+  "boot_component_sha256": "413c1272958125c48b7b02c1780c7beebb8ab063b835f3203ccd722ecc7dfaa6",
+  "api16_v1_signature_verified": true,
+  "physical_boot_observation": {
+    "version": "1.1",
+    "user_confirmed_auto_simpletv": true,
+    "user_confirmed_no_boot_commercial": true,
+    "normal_reboot": true,
+    "new_boot_id_and_actual_callback_matched": true,
+    "helper_reason": "VENDOR_BOOT",
+    "error": "",
+    "reboot_temporary_directory_absent": true
+  },
+  "pre_existing_packages_retained": true,
+  "boot_video_move_branch_in_this_cycle": false,
+  "boot_video_move_undo": "Earlier owner TV standalone isolation / restore / re-isolation test passed; integrated cycle began with video already absent.",
+  "new_optional_app_install_branch_in_cycle": false,
+  "new_boot_component_upgrade_and_timed_test": true,
+  "native_settings_database_written": false,
+  "vendor_policy_database_written_by_shipping_tool": false,
+  "public_cli_check": {
+    "passed": true,
+    "checked_at": "2026-10-20T13:19:27.314116+08:00",
+    "configuration_verified": true,
+    "boot_callback_reported": true,
+    "pre_existing_packages_retained": true,
+    "animations": [
+      0.5,
+      0.5,
+      0.5
+    ]
+  },
+  "ui_check": {
+    "direction_key": true,
+    "settings_overlay": true,
+    "back_key_result": "Original EUI desktop; path retained",
+    "physical_home_remapped": false,
+    "standby_wakeup_tested": false
+  },
+  "overall_boot_or_menu_speedup_proven": false
+}
