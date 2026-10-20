@@ -1,0 +1,46 @@
+{
+  "schema": 2,
+  "required_properties": {
+    "ro.product.model": "LeTVX60",
+    "ro.build.version.release": "4.1.2",
+    "ro.build.version.sdk": "16",
+    "ro.product.cpu.abi": "armeabi-v7a"
+  },
+  "build_id": "V1101RCN02C060070B07031S",
+  "fixed_file_hashes": {
+    "/system/bin/pppmanager": "b08c0f145b3f76a47b368f498268014ecaa64c7f0f698dd99ee60745fd666589",
+    "/system/etc/ppp.disconnect": "38d930759e257b5ea3dbbd8b242e0359b14f471115a2f9a5fd49e2e81cfffb85",
+    "/system/framework/framework.jar": "93782ab3f116eed9aff77451a35c606259e1f6de46957e8f6c485ce4bb235b55",
+    "/system/framework/android.policy.jar": "d6cfad0291a4457c2cbb84b91ec08449cb8981220c95899b9ada5d9c8bd086a9",
+    "/system/framework/framework-letv.jar": "1951548387872982065d497d1e4294dc1e8d0a3cb874b5e9ff951c0b9d6431f5",
+    "/system/bin/MpqEarlyVideo": "da826f559d3a11a5b5f7a1ee553ccde6c8cf182744c725e2fdc138d8b0ac4e14",
+    "/system/framework/services.jar": "c2d9fb8b3f688e4fcccd5eaa99085da61ece0616ffe2c9ac492165edddcdfa6d"
+  },
+  "package_hashes": {
+    "com.stv.bootadmanager": [
+      "79eb45e76a072fb8d1512a87c979c251a940a648e638bf33a0b6c6ff50a384b5",
+      "cc50728853a597d7c109d5d6ff1267c95ac62dcf078ce810bba5a120c48c7bbd"
+    ],
+    "com.stv.screenflyter": [
+      "68197f77dbb678fcc65407398acae6cbfc1962029ec0710586c3e8d53907ce09",
+      "ec6073a6442bfa0572fcfe51188134fdc100e0e17e4cb53507a110f574849fde"
+    ],
+    "com.stv.reportlog": [
+      "6248edabd775bcc41d0085aaf1a437b14a9e47491ec3edabbd80765590026021",
+      "9a2ebcdcbdc8289454a71a995fa2acb7dbe17fc4c3976f5634691a79a500f4a6"
+    ],
+    "com.stv.shopping": [
+      "8c1a1e6fe51d0c9b4ca64bf934b9db8602686eb94f970e6d67c7b18fd7b96cca"
+    ],
+    "sina.mobile.tianqitongstv": [
+      "05e0ad6f64dfeb679c2c5e84cd67e504ebe44e4775e7645a46dfec6c3b2b1534"
+    ]
+  },
+  "boot_video_sha256": "ee524ef7e31b371f79f090d175ab7cc23f6b61acefd62cc6de739e88c0cad81b",
+  "boot_video_bytes": 6390684,
+  "asset_hashes": {
+    "x60-simpletv-boot.apk": "413c1272958125c48b7b02c1780c7beebb8ab063b835f3203ccd722ecc7dfaa6",
+    "simple-tv-launcher-v1.5.9.apk": "633dda416c05046d887e8112a8e43f0735d92fd0b737f3bfecc255e4f24f9615"
+  },
+  "excluded_variant_note": "Factory shopping 3.2.0 has a provider; whole-app disable is not approved for that variant. Stop on its hash."
+}

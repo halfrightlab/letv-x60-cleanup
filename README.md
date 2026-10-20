@@ -4,8 +4,8 @@
 
 ## 下载与使用
 
-1. 下载 [工具 ZIP](./letv-x60-tool-v2.zip) 和 [SHA-256 校验文件](./letv-x60-tool-v2.zip.sha256)，核对后解压。
-2. 在解压得到的 `letv-x60-tool-v2` 目录中执行下文命令。工具源码与开机组件源码均在 ZIP 内，仓库根目录不直接运行工具。
+1. 到 [Releases](https://github.com/halfrightlab/letv-x60-cleanup/releases) 下载 [完整工具 ZIP](https://github.com/halfrightlab/letv-x60-cleanup/releases/download/v2.0.0/letv-x60-tool-v2.zip) 和 [SHA-256 校验文件](https://github.com/halfrightlab/letv-x60-cleanup/releases/download/v2.0.0/letv-x60-tool-v2.zip.sha256)。在二者所在目录运行 `shasum -a 256 -c letv-x60-tool-v2.zip.sha256`，显示 `OK` 后解压。
+2. 在解压得到的 `letv-x60-tool-v2` 目录中执行下文命令。完整工具 ZIP 包含两份必需 APK；GitHub 自动生成的 `Source code (zip)` 和 `Code → Download ZIP` 是源码快照，不是完整运行包。
 3. 先运行 `inspect`，只有严格兼容检查通过后再运行 `apply`；每台电视保存自己的备份目录。恢复使用同一目录运行 `restore`。
 
 ZIP SHA-256：`afc30cd942a0f5dad5f8048e056b2579eef86f56ab55d9f0bdb3b8fee1ec6a50`。
@@ -39,10 +39,11 @@ ZIP SHA-256：`afc30cd942a0f5dad5f8048e056b2579eef86f56ab55d9f0bdb3b8fee1ec6a50`
 ```text
 x60_tool.py          单文件命令工具
 profile.json         已识别固件、系统文件和 APK 哈希
-assets/              原版 SimpleTV 和本次自建开机组件 APK
 boot-app/            本次开机组件完整 Java 源码及清单
 SIMPLETV-LICENSE.txt  SimpleTV 原作者 Apache 2.0 许可证
 ```
+
+上述源码直接展开在仓库中，可以浏览、比较和修改。Releases 的完整工具 ZIP 另含 `assets/`，提供原版 SimpleTV 和本次自建开机组件 APK；使用时下载完整工具 ZIP。
 
 所有运行记录与备份放在你自己指定的 `--state` 目录，不在分享包内。每台电视单独一个目录，务必保存；它含设备识别资料、原应用备份、布局和原广告素材，不要公开转发。
 

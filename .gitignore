@@ -1,5 +1,9 @@
 .DS_Store
 .tmp/
+assets/
+*.apk
+*.zip
+*.zip.sha256
 work/
 my-x60-backup/
 **/runs/
