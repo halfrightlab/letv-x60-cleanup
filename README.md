@@ -1,101 +1,180 @@
 # 乐视 X60 可撤销精简工具
 
-用于原案例的 X60／X603100、EUI 6.0.070S_0703、Android 4.1.2 固件：停用已识别广告和后台组件，配置 SimpleTV 简洁桌面及开机进入，保留原值和撤销入口。它不会升级 Android 或替换底层系统。
+> 开机广告、后台上报、购物推送……这台老电视背了太多它不想背的东西。帮它卸卸货。
 
-## 下载与使用
+乐视 X60 的屏幕其实还很能打，就是开机先放广告、后台偷偷跑一堆服务、桌面挤满推荐，用起来像在逛商场。这个工具帮它**减负**：
 
-1. 到 [Releases](https://github.com/halfrightlab/letv-x60-cleanup/releases) 下载 [完整工具 ZIP](https://github.com/halfrightlab/letv-x60-cleanup/releases/download/v2.0.0/letv-x60-tool-v2.zip) 和 [SHA-256 校验文件](https://github.com/halfrightlab/letv-x60-cleanup/releases/download/v2.0.0/letv-x60-tool-v2.zip.sha256)。在二者所在目录运行 `shasum -a 256 -c letv-x60-tool-v2.zip.sha256`，显示 `OK` 后解压。
-2. 在解压得到的 `letv-x60-tool-v2` 目录中执行下文命令。完整工具 ZIP 包含两份必需 APK；GitHub 自动生成的 `Source code (zip)` 和 `Code → Download ZIP` 是源码快照，不是完整运行包。
-3. 先运行 `inspect`，只有严格兼容检查通过后再运行 `apply`；每台电视保存自己的备份目录。恢复使用同一目录运行 `restore`。
+- 🚫 停掉广告、广告屏保、日志上报、购物这几个已经认出来的「累赘」
+- 🏠 装上干净的 **SimpleTV** 桌面，开机直接进，四列两行，一眼看完
+- ⚡ 三项系统动画调到 `0.5`，切换起来更利落
+- ↩️ **每一步都能撤销**：改之前先备份原值，一条 `restore` 就能回到原样
 
-ZIP SHA-256：`afc30cd942a0f5dad5f8048e056b2579eef86f56ab55d9f0bdb3b8fee1ec6a50`。
+它不刷机、不升级 Android、不替换系统底层，只是把不想要的东西「关掉」而不是「删掉」。
 
-[脱敏验证摘要](./validation.json) · [第三方 SimpleTV 许可证](./SIMPLETV-LICENSE.txt) · [验证边界](./ROADMAP.md)
+[![License](https://img.shields.io/badge/license-Apache%202.0-blue?style=flat-square)](LICENSE)
+[![Release](https://img.shields.io/github/v/release/halfrightlab/letv-x60-cleanup?style=flat-square)](https://github.com/halfrightlab/letv-x60-cleanup/releases)
+[![Device](https://img.shields.io/badge/LeTV-X60%20%C2%B7%20EUI%206.0.070S-e60012?style=flat-square)](#先看你的电视能不能用)
+[![Python](https://img.shields.io/badge/python-3.9%2B-3776AB?style=flat-square&logo=python&logoColor=white)](x60_tool.py)
 
-当前状态：原案例电视已完成应用／撤销／再应用，开机组件 `1.1` 已通过完整重启与本人实机验收，自动进入 SimpleTV，未出现商业广告。工具用于下列严格匹配的固件，尚未在第二台电视验收。
+[脱敏验证摘要](./validation.json) · [验证边界](./ROADMAP.md) · [第三方 SimpleTV 许可证](./SIMPLETV-LICENSE.txt)
 
-## 工具范围
+## 先看你的电视能不能用
 
-- 停用广告管理、广告屏保、日志上报、购物四个已识别整包，原有应用不卸载。
-- 天气只停更新服务和自启／定时接收器，保留天气应用及两个提供器。
-- 三项动画设为 `0.5`。
-- 对已核实的默认开机宣传视频完整备份，再原位改名隔离。
-- 安装作者原版 SimpleTV `1.5.9`，配置四列两行快捷方式；已有布局先备份。快捷方式对应的原应用不存在时留空，不代装酷喵等应用。
-- 新增 `X60 SimpleTV Boot 1.1` 开机组件，只有 `RECEIVE_BOOT_COMPLETED` 权限，无联网权限、共享 UID 或常驻服务。接收本固件的 EUI 桌面启动通知，通过一次两秒定时交接打开 SimpleTV；按本次开机 ID 去重，正常 Android 开机广播作为另一条入口。
-- `restore` 恢复这台电视应用前保存的目标状态、动画原值及行存在性、SimpleTV 布局和开机素材；只移除本工具本次新装的两个应用，保留应用前已有的应用。工具不写厂商权限数据库。
+这个工具是「量体裁衣」做的，只认一种固件。对不上就会自己停下，不会硬来：
 
-开机组件每次开机成功打开 SimpleTV 一次，底层 Android 仍须启动，期间可能短暂显示原界面。物理主页键、返回键和待机唤醒路径未修改；本机从 SimpleTV 按返回键会进入原桌面。它不替换底层系统。
+| 项目 | 要求 |
+|---|---|
+| 机型 / 硬件 | `LeTVX60` / `X603100` |
+| 系统 | Android `4.1.2`（API 16，armeabi-v7a） |
+| EUI | `6.0.070S_0703` |
+| 固件 | 包含 `V1101RCN02C060070B07031S` |
 
-## 支持条件
+除了这些，工具还会核对系统框架、原生开机播放器、厂商权限入口和目标 APK 的 SHA-256。所以**固件名字一样，也可能因为你后来更新过某个应用而被拦下**。比如购物应用目前只接受原案例的 `4.2.2`，旧出厂版 `3.2.0` 带数据提供器，没纳入停用范围。
 
-已研究设备为 `LeTVX60`、硬件 `X603100`、Android `4.1.2 / API 16 / armeabi-v7a`、EUI `6.0.070S_0703`、固件含 `V1101RCN02C060070B07031S`。
+被拦下了也别去改 `profile.json` 或者刷别的电视的文件来「骗过」检测。检测就是来保护你的电视的。
 
-工具还会核对系统框架、原生开机播放器、厂商权限入口和实际目标 APK 的 SHA-256。因此，同固件名称相同仍可能因后装应用更新不同而停止。购物应用目前只接受原案例的 `4.2.2`；旧出厂版 `3.2.0` 含数据提供器，未纳入整包停用。不要为通过检测而改 `profile.json` 或刷入其他电视的文件。
+## 它到底改了什么
 
-普通 `adb root` 不会直接获得本方案需要的权限。清理和原值恢复沿用已在原机验证的临时 UID `0` 方法，先检查厂商脚本／二进制、busybox 缺失及 PPP 空闲状态，使用私有临时目录，完成后清理。它会调用厂商 `pppmanager disconnect` 入口；环境不符即停止，不用于正在进行 PPP／PPPoE 拨号的电视。不调整权限策略，不新增常驻服务或更改网络属性；开机组件本身不需要 root。
+| 动作 | 细节 |
+|---|---|
+| 停用 4 个整包 | 广告管理、广告屏保、日志上报、购物。只停用，不卸载 |
+| 天气 | 只停更新服务和自启 / 定时接收器，天气应用和两个提供器保留 |
+| 动画 | 三项系统动画设为 `0.5` |
+| 开机宣传视频 | 先完整备份，再原地改名隔离 |
+| SimpleTV 桌面 | 安装作者原版 SimpleTV `1.5.9`，配置四列两行快捷方式；已有布局先备份。快捷方式对应的应用不存在就留空，不会顺手帮你装酷喵之类的 |
+| 开机组件 | 新增 `X60 SimpleTV Boot 1.1`，见下文 |
 
-## 目录
+**开机组件**是本项目新写的一个小程序，只申请了 `RECEIVE_BOOT_COMPLETED` 权限：不联网、不共享 UID、没有常驻服务。它接收这版固件 EUI 桌面的启动通知，用一次两秒的定时交接打开 SimpleTV；按本次开机 ID 去重，正常的 Android 开机广播作为第二条入口。
 
-```text
-x60_tool.py          单文件命令工具
-profile.json         已识别固件、系统文件和 APK 哈希
-boot-app/            本次开机组件完整 Java 源码及清单
-SIMPLETV-LICENSE.txt  SimpleTV 原作者 Apache 2.0 许可证
-```
+实际效果：每次开机自动进 SimpleTV。底层 Android 还是要先启动，所以中间可能闪一下原界面。物理主页键、返回键和待机唤醒都没改，在 SimpleTV 里按返回键会回到原桌面。
 
-上述源码直接展开在仓库中，可以浏览、比较和修改。Releases 的完整工具 ZIP 另含 `assets/`，提供原版 SimpleTV 和本次自建开机组件 APK；使用时下载完整工具 ZIP。
+## 准备工作
 
-所有运行记录与备份放在你自己指定的 `--state` 目录，不在分享包内。每台电视单独一个目录，务必保存；它含设备识别资料、原应用备份、布局和原广告素材，不要公开转发。
+1. **只在你自己的电视上用**，由电视主人本人操作。
+2. 电脑装好 Python `3.9` 或更新版本，再下载 [Google 官方 Platform-Tools](https://developer.android.com/tools/releases/platform-tools)。ADB 解压就能用，不用全局安装，也不用 `sudo`。
+3. 电脑和电视连在同一个家庭局域网，记下电视的 IP。
+4. 打开电视的调试入口。这版固件上验证过的入口是「信号源 → 1 → 4 → 7」。别的固件上不灵就停下，别乱猜口令。
+5. 电视弹出连接授权时，本人批准这一次就好，**不要勾「始终允许」**。电脑如果弹本地网络权限提示，自己看清楚再决定，工具不会替你改系统权限。
+6. 让电视停在原桌面或 SimpleTV，别在播放东西。工具只连你给的那一个 IP，不扫描网络。
 
-## 使用前
+## 下载
 
-1. 由电视所有者在自己的设备上授权操作。准备 Python `3.9` 或更新版本，以及 [Google 官方 Platform-Tools](https://developer.android.com/tools/releases/platform-tools) 。ADB 可直接解压使用，无须全局安装或 `sudo`。
-2. 电脑与电视处于互通的家庭局域网，查看电视自己的 IP。在本机该版固件上，已验证的调试入口是「信号源 → 1 → 4 → 7」。其他固件无效就停止，不猜口令。
-3. 如电视出现连接授权，由本人批准本次连接，不勾选“始终允许”。电脑如有本地网络权限提示，自行核对并明确决定；工具不会更改系统权限。
-4. 回到原桌面或 SimpleTV，停止播放和其他操作。只连接你提供的单一 IP，不扫描网络。
+1. 到 [Releases](https://github.com/halfrightlab/letv-x60-cleanup/releases) 下载 [完整工具 ZIP](https://github.com/halfrightlab/letv-x60-cleanup/releases/download/v2.0.0/letv-x60-tool-v2.zip) 和 [SHA-256 校验文件](https://github.com/halfrightlab/letv-x60-cleanup/releases/download/v2.0.0/letv-x60-tool-v2.zip.sha256)。
+2. 在两个文件所在目录运行 `shasum -a 256 -c letv-x60-tool-v2.zip.sha256`，显示 `OK` 再解压。ZIP 的 SHA-256 是 `afc30cd942a0f5dad5f8048e056b2579eef86f56ab55d9f0bdb3b8fee1ec6a50`。
+3. 认准完整工具 ZIP，它里面带着两个必需的 APK。GitHub 自动生成的 `Source code (zip)` 和 `Code → Download ZIP` 只是源码快照，**缺 APK，跑不起来**。
 
-## 命令
+## 四条命令
 
-在解压目录打开终端，将 `TV_IP` 和 ADB 路径换成你自己的值。以下以 macOS／Linux 为例：
+在解压出来的 `letv-x60-tool-v2` 目录里打开终端，把 `TV_IP` 和 ADB 路径换成你自己的：
 
 ```sh
-# 只读核对兼容性，不改电视配置
+# 1. 体检：只读核对兼容性，不改任何配置
 python3 x60_tool.py inspect --ip TV_IP --adb "/path/to/platform-tools/adb" --state "./my-x60-backup"
 
-# 保存本机原值和备份，然后应用固定范围优化
-python3 x60_tool.py apply --ip TV_IP --adb "/path/to/platform-tools/adb" --state "./my-x60-backup"
+# 2. 动手：先备份原值，再应用固定范围的优化
+python3 x60_tool.py apply   --ip TV_IP --adb "/path/to/platform-tools/adb" --state "./my-x60-backup"
 
-# 检查上次成功应用或恢复后的状态
-python3 x60_tool.py check --ip TV_IP --adb "/path/to/platform-tools/adb" --state "./my-x60-backup"
+# 3. 复查：检查上次应用或恢复后的状态
+python3 x60_tool.py check   --ip TV_IP --adb "/path/to/platform-tools/adb" --state "./my-x60-backup"
 
-# 撤销本工具本次变更，恢复到首次 apply 之前
+# 4. 后悔药：撤销本工具的改动，回到第一次 apply 之前
 python3 x60_tool.py restore --ip TV_IP --adb "/path/to/platform-tools/adb" --state "./my-x60-backup"
 ```
 
-Windows 使用 `py -3` 替换 `python3`，ADB 路径指向 `adb.exe`，参数用法相同。
+Windows 把 `python3` 换成 `py -3`，ADB 路径指向 `adb.exe`，其余一样。
 
-`inspect` 会下载指定电视上少量框架和目标 APK 到私人检查目录作哈希比较，读取相关设备信息，不执行提权或配置修改。`apply`、`check`、`restore` 的素材和布局核对可能临时取得 UID `0`；`check` 不改持久配置。所有模式使用本机独立 ADB 端口 `5038`，被占用即停止。电视调试端口默认 `5555`，只有电视明确给出其他端口时才使用 `--port`。
+**`inspect` 没通过，就不要往下跑 `apply`。**
 
-首次 `apply` 创建 `original.json`，之后不会拿当前优化状态覆盖它。同一个私人目录可以执行“应用 → 撤销 → 再应用”。如电视 IP 变化可以更新 `--ip`，备份仍须匹配原设备标识；不要用另一台电视的目录。
+几个值得知道的细节：
 
-每条命令会显示时间戳。logcat 仅在命令执行期间显示新产生的少量相关错误，不保存、不长期采集。每次运行的命令与返回值保存在 `runs/`。
+- `inspect` 会从电视上下载少量框架和目标 APK 到私人检查目录做哈希比对，读一些设备信息，不提权、不改配置。
+- 所有模式都用本机独立的 ADB 端口 `5038`，被占用就停。电视调试端口默认 `5555`，只有电视明确显示别的端口时才用 `--port`。
+- 每条命令带时间戳。logcat 只在命令执行期间显示少量新产生的相关错误，不保存、不长期采集。每次运行的命令和返回值存进 `runs/`。
 
-## 验收与失败处理
+## 备份目录：比遥控器还重要
 
-`APPLIED` 表示工具已读回包／组件、动画、布局、素材状态及原有包保留情况，不代表本人看过启动过程。正常重启后须由本人确认自动进入 SimpleTV、观察有无广告、检查遥控／设置／信号源。短按电源可能只是待机，不能代替完整启动验收；待机唤醒也应单独检查。重启后按上述入口重新开启 ADB，再执行 `check`。
+`--state` 指定的目录是这台电视的「病历本」：设备识别信息、原应用备份、布局、原广告素材都在里面。
 
-`RESTORED` 恢复的是首次 `apply` 前的配置。例如原来已被其他方法禁用的广告包仍会保持禁用；它不会擅自恢复到另一台电视或另一份历史记录的值。撤销布局会替换本次涉及的两个偏好文件，因此应用后的手动布局修改也会被撤销。原本没有的新应用在撤销时会被移除，其本地配置随之清除。
+- **每台电视一个目录**，好好保存，不要拿另一台电视的目录来用。
+- 里面有设备识别信息，**不要公开转发**。
+- 第一次 `apply` 会生成 `original.json`，以后不会被当前状态覆盖。所以同一个目录可以「应用 → 撤销 → 再应用」随便来回。
+- 电视 IP 变了可以换 `--ip`，但备份仍要和原设备对得上。
 
-完整开机仍须本人观察；工具的配置检查或手动打开不能代替它。本版本接收 EUI 自身的启动事件，不通过修改厂商权限数据库维持自启。
+## 撤销会撤到哪
 
-本轮实机循环使用的是已经优化过的原案例电视：三步均读回通过，冻结的首次备份未被覆盖。该循环开始时广告素材已隔离、两个新增应用已经存在，因此没有覆盖首次安装、移除新增应用和素材移动三个分支；素材隔离／恢复／再次隔离、旧包和组件的恢复另有此前原机测试。本轮完整重启由本人确认自动进入 SimpleTV 且无商业广告，组件也读回了与新开机 ID 一致的真实启动回调。方向键及设置入口可用，返回键保留上述原系统行为。没有第二台电视或恢复出厂后整套测试，也没有可比数据证明整体开机、菜单提速。
+`restore` 恢复的是**这台电视第一次 `apply` 之前**的样子：
 
-遇到 `STOP`、超时或中断，保留整个私人目录，查看最新 `runs/` 下的 `error.json` 和 `commands.json`。不把退出码 `0` 当作所有 Binder 操作成功；工具会另行读回。结果不明时先检查实际状态，不盲目重复应用。不要删除备份或手改 `original.json` 来消除报错。电视返回 `Connection refused` 时，先重新开启调试；Android 4.1.2 没有 Android 11 的无线调试配对功能。
+- 恢复目标状态、动画原值（包括那一行原来存不存在）、SimpleTV 布局和开机素材。
+- 只移除本工具新装的两个应用，你之前自己装的都留着。
+- 原来就被别的办法禁用的广告包，撤销后还是禁用，它不会「好心」帮你打开。
+- 布局恢复会替换这次涉及的两个偏好文件，所以 apply 之后你手动改的布局也会一起撤掉。
+- 工具不写厂商权限数据库。
+
+## 装完怎么验收
+
+`APPLIED` 的意思是：工具已经读回包和组件、动画、布局、素材状态，以及原有应用是否保留。**它没有替你看过开机过程。**
+
+所以请亲自做一次完整重启：
+
+- [ ] 自动进入 SimpleTV
+- [ ] 开机过程中没有商业广告
+- [ ] 遥控器、设置、信号源都正常
+- [ ] 待机唤醒也单独试一次（短按电源可能只是待机，不能代替完整重启）
+
+重启后按前面的入口重新打开 ADB，再跑一次 `check`。
+
+## 出问题了怎么办
+
+- 遇到 `STOP`、超时或者中断：**整个私人目录原样保留**，看最新一次 `runs/` 里的 `error.json` 和 `commands.json`。
+- 退出码是 `0` 不代表每个 Binder 操作都成功了，工具会另外读回确认。结果说不清时先查实际状态，别闷头重复 `apply`。
+- 别删备份、别手改 `original.json` 来让报错消失。那不是修好了，是把病历撕了。
+- 电视返回 `Connection refused`：重新打开调试。Android 4.1.2 没有 Android 11 那种无线调试配对功能。
+
+## 关于提权（给好奇的人）
+
+普通的 `adb root` 拿不到这套方案需要的权限。清理和原值恢复沿用在原机上验证过的临时 UID `0` 方法：先检查厂商脚本 / 二进制、busybox 是否缺失、PPP 是否空闲，用私有临时目录，做完就清理。
+
+它会调用厂商的 `pppmanager disconnect` 入口，所以**正在用 PPP / PPPoE 拨号上网的电视不要用**，环境不对工具也会自己停。它不调整权限策略，不加常驻服务，不改网络属性。开机组件本身不需要 root。
+
+`apply`、`check`、`restore` 核对素材和布局时可能临时取得 UID `0`；`check` 不改持久配置。
+
+## 验证到哪一步了（如实说明）
+
+- ✅ 原案例电视完成了「应用 → 撤销 → 再应用」，开机组件 `1.1` 通过完整重启实机验收：自动进入 SimpleTV，没有商业广告，组件读回了和新开机 ID 一致的真实启动回调。方向键和设置入口可用，返回键保留原系统行为。
+- ⚠️ 这轮循环用的是一台已经优化过的电视，首次安装、移除新增应用、素材移动这三个分支没有覆盖到；素材隔离 / 恢复 / 再隔离、旧包和组件恢复在此前的原机测试里分别验证过。
+- ❌ 没有第二台电视，也没有恢复出厂后的整套测试。
+- ❌ 没有数据能证明开机或菜单变快了，不会把停用了几个包当成提速幅度来吹。也不保证所有应用内广告都消失。
+
+## 仓库里有什么
+
+```text
+x60_tool.py           单文件命令工具
+profile.json          已识别的固件、系统文件和 APK 哈希
+boot-app/             开机组件完整 Java 源码及清单
+SIMPLETV-LICENSE.txt  SimpleTV 原作者的 Apache 2.0 许可证
+validation.json       脱敏验证摘要
+ROADMAP.md            已完成和尚未验证的事项
+```
+
+源码都直接展开在仓库里，可以随便看、比较、修改。Releases 里的完整工具 ZIP 另外带 `assets/`，里面是原版 SimpleTV 和本项目自建的开机组件 APK。
 
 ## 来源与边界
 
-Simple TV Launcher `1.5.9` 为 [原作者 GitHub 发行版](https://github.com/alescdb/LauncherTV/releases/tag/v1.5.9) 的未修改 APK，SHA-256 为 `633dda416c05046d887e8112a8e43f0735d92fd0b737f3bfecc255e4f24f9615`。版权归 Alexandre Del Bigio，许可证随包保留。布局格式核对了同一标签的 `Setup.java`、`ApplicationFragment.java` 和 `ApplicationView.java`。
+- **Simple TV Launcher `1.5.9`** 是 [原作者 GitHub 发行版](https://github.com/alescdb/LauncherTV/releases/tag/v1.5.9) 的未修改 APK，SHA-256 为 `633dda416c05046d887e8112a8e43f0735d92fd0b737f3bfecc255e4f24f9615`。版权归 Alexandre Del Bigio，许可证随包保留。布局格式核对了同一标签的 `Setup.java`、`ApplicationFragment.java` 和 `ApplicationView.java`。
+- **开机组件**是本项目新写的源码，独立签名，只会打开 `org.cosinus.launchertv/.Launcher`，不接受任意包名或命令。EUI 入口依据本固件 `services.jar` 里的 `startHomeActivityLocked` 和广播筛选代码；标准广播定义见 [Android 开机完成广播](https://developer.android.com/reference/android/content/Intent#ACTION_BOOT_COMPLETED)。两秒交接用系统单次定时器，接收器不对外导出；诊断和测试入口要求调用方具备 `DUMP` 权限。
+- 本工具**不提供**固件、别的电视的备份、原机广告素材、ADB 密钥、登录凭据或任何盗版资源。
 
-开机组件为本任务新增源码，使用独立签名，仅固定打开 `org.cosinus.launchertv/.Launcher`，不接受任意包名或命令。EUI 入口由本固件 `services.jar` 的 `startHomeActivityLocked` 和广播筛选代码核对；正常广播定义见 [Android 开机完成广播](https://developer.android.com/reference/android/content/Intent#ACTION_BOOT_COMPLETED) 。两秒交接使用系统单次定时器，接收器不对外导出；诊断与测试入口要求调用方具备 `DUMP` 权限。
+## 贡献者
 
-本工具不提供固件、第三方电视的备份、原机广告素材、ADB 密钥、登录凭据或盗版来源。不保证所有应用内广告消失，不将停用包数量当作提速幅度，也没有在第二台电视做过硬件验收。
+| | 谁 | 干了什么 |
+|---|---|---|
+| 🧑‍🔬 | [半对实验室 halfrightlab](https://github.com/halfrightlab) | 出主意、贡献自家电视、真机验收 |
+| 🤖 | [Claude](https://github.com/claude)（Anthropic） | 编程助手 |
+| 🤖 | [Codex / ChatGPT](https://github.com/codex)（OpenAI） | 编程助手 |
+| 🤖 | WorkBuddy | 编程助手 |
+
+家里也有一台 X60、愿意帮忙验证第二台？欢迎提 issue。
+
+## 许可协议
+
+本项目代码采用 [Apache License 2.0](LICENSE)：可以自由使用、修改、商用，再分发时请保留 [NOTICE](NOTICE) 里的署名。SimpleTV 遵循其原作者的 [Apache 2.0 许可证](SIMPLETV-LICENSE.txt)。
